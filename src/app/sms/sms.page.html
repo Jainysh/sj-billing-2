@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      SMS
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card padding color="secondary" text-center (click)="repair()">
+    <ion-card-content>
+      <h1 slot="start">
+        <ion-icon name="build"></ion-icon> &nbsp;
+        Repaired
+      </h1>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card padding color="tertiary" text-center (click)="order()">
+    <ion-card-content>
+      <h1>
+        <ion-icon name="cart"></ion-icon>&nbsp;
+        Order Pickup
+      </h1>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card padding color="dark" text-center (click)="thanks()">
+    <ion-card-content>
+      <h1>
+        <ion-icon name="heart"></ion-icon>&nbsp;
+        Thanks for shopping
+      </h1>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-button expand="block" (click)="scheduleNotification()">Schedule</ion-button>
+  <ion-button expand="block" (click)="recurringNotification()">Every Minute</ion-button>
+  <ion-button expand="block" (click)="repeatingDaily()">Daily</ion-button>
+  <ion-button expand="block" (click)="getAll()">Get All</ion-button> -->
+
+  <!-- <ion-list>
+    <ion-item *ngFor="let n of scheduled">
+      <ion-label text-wrap>
+        {{ n.id }} - {{ n.title }}
+        <p>Trigger: {{ n.trigger | json }} </p>
+      </ion-label>
+    </ion-item>
+  </ion-list> -->
+</ion-content>

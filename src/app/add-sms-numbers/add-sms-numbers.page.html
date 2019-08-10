@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Send {{title}} messages</ion-title>
+    <ion-button fill="clear" slot="end" (click)="closeModal()">
+      Close
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <!-- <ion-card-header>
+          <ion-card-title>Add SMS number</ion-card-title>
+        </ion-card-header> -->
+    <ion-card-content text-align="center">
+      <ion-item>
+        <ion-input [(ngModel)]="newNumber" placeholder="Customer Contact Number" type="number"></ion-input>
+        <ion-button [disabled]="newNumber && newNumber < 999999999" size="default" fill="solid" (click)='addNumber()'>
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+
+      <ion-chip *ngFor="let contact of contactList">
+        <ion-icon name="person" color="primary"></ion-icon>
+        <ion-label>{{contact}}</ion-label>
+        <ion-icon (click)="removeContact(contact)" name="close-circle"></ion-icon>
+      </ion-chip>
+
+
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" color="primary" [disabled]="!contactList.length" (click)="sendSMS()">
+              Send SMS
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" color="primary" (click)="closeModal()">
+              Cancel
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+      <!-- <ion-item>
+             {{contact}}<ion-icon slot="end" name="close"></ion-icon>
+          </ion-item> -->
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

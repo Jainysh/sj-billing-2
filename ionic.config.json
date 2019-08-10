@@ -1,0 +1,7 @@
+{
+  "name": "Shankheshwar",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

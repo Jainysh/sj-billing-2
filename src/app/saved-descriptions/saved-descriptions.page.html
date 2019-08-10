@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Saved Descriptions </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Gold</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-input [(ngModel)]="newGoldItem" (keydown.Enter)="addDescription('Gold')"></ion-input>
+        <ion-button [disabled]="!newGoldItem" fill="solid" (click)="addDescription('Gold')">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <div class="scroll-chips">
+        <ion-chip *ngFor="let goldItem of goldItems">
+          <ion-label>{{goldItem.description}}</ion-label>
+          <ion-icon (click)="removeDescription(goldItem)" name="close-circle"></ion-icon>
+        </ion-chip>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Silver</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-input [(ngModel)]="newSilverItem" (keydown.Enter)="addDescription('Silver')"></ion-input>
+        <ion-button [disabled]="!newSilverItem" fill="solid" (click)="addDescription('Silver')">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <div class="scroll-chips">
+
+        <ion-chip *ngFor="let silverItem of silverItems">
+          <ion-label>{{silverItem.description}}</ion-label>
+          <ion-icon (click)="removeDescription(silverItem)" name="close-circle"></ion-icon>
+        </ion-chip>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-button fill="clear" (click)="resetDefaultSettings()" expand="full">
+    Reset default settings
+  </ion-button>
+</ion-footer>

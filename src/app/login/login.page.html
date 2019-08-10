@@ -1,0 +1,65 @@
+<ion-content text-center>
+  <img src='../../assets/imgs/logo.png'>
+  <!--  <ion-grid>
+      <ion-row>
+
+         style="position: absolute; top: 20%; padding: 5%; width: 100%" 
+
+        <ion-col style="display:flex; justify-content: center;
+        flex-direction: column;">
+          <ion-input type="password" [(ngModel)]="password" placeholder='Password'></ion-input>
+        </ion-col>
+        <ion-col style="display:flex; justify-content: center;
+        flex-direction: column; text-align: right">
+          <ion-button size="large" fill="clear" [disabled]="password.length < 4" (click)="login()">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+ -->
+  <ion-grid class="pin">
+    <ion-row>
+      <ion-col>
+        <ion-icon [name]="password[0] || password[0] === 0? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon [name]="password[1] || password[1] === 0? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon [name]="password[2] || password[2] === 0? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+      </ion-col>
+      <ion-col>
+        <ion-icon [name]="password[3] || password[3] === 0? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="keypad">
+    <ion-row>
+      <ion-col (click)="addPin(1)">1</ion-col>
+      <ion-col (click)="addPin(2)">2</ion-col>
+      <ion-col (click)="addPin(3)">3</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col (click)="addPin(4)">4</ion-col>
+      <ion-col (click)="addPin(5)">5</ion-col>
+      <ion-col (click)="addPin(6)">6</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col (click)="addPin(7)">7</ion-col>
+      <ion-col (click)="addPin(8)">8</ion-col>
+      <ion-col (click)="addPin(9)">9</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col (click)="removePin()">
+        <ion-icon name="backspace"></ion-icon>
+      </ion-col>
+      <ion-col (click)="addPin(0)">0</ion-col>
+      <ion-col (click)="exitApp()"><ion-icon name="exit"></ion-icon></ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+</ion-content>
