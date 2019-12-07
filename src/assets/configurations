@@ -1,0 +1,93 @@
+intro.page.ts
+
+
+1 *************************************************************
+  /**
+  * 
+  * AUTH KEY: XX<abcd random>XX >> stored in hex
+  * isAppInitialized = false
+  * generateAuthKey, state = authKeyGenerated
+  * confirmAuthKey, state = authKeyConfirmed
+  * gold, silver rate set and suggestion library loaded, isAppInitialized = true
+  *
+  */
+
+  2 ************************************************************************
+
+ dbAuthKeyState: string = 'authKeyState';
+  dbAuthKey: string = 'authKey';
+  dbDecryptedAuthKey: string = 'decryptedAuthKey';
+
+  3 *********************************************************************
+
+    // this.storage.get(this.dbAuthKeyState).then(
+    //   (state) => {
+    //     if (state && state === 'authKeyGenerated') {
+    //       this.storage.get(this.dbAuthKey).then(
+    //         (val) => this.authKey = val
+    //       )
+    //       this.storage.get(this.dbDecryptedAuthKey).then(
+    //         (val) => this.decryptedAuthKey = val
+    //       )
+    //       this.slides.slideTo(1);
+    //     } else if (state && state === 'authKeyConfirmed') {
+    //       this.slides.slideTo(2);
+    //     }
+    //   }
+    // )
+
+
+4 *****************************************************************************************
+
+ascii_to_hexa(str) {
+    var arr1 = [];
+    for (var n = 0, l = str.length; n < l; n++) {
+      var hex = Number(str.charCodeAt(n)).toString(16);
+      arr1.push(hex);
+    }
+    return arr1.join('');
+  }
+
+  generateAuthKey() {
+    let authKeyPrefix = Math.random().toString(36).substring(2, 4);
+    let authKeySuffix = Math.random().toString(36).substring(2, 4);
+    let authKeyBody = Math.random().toString(36).substring(2, 6);
+    this.authKey = this.ascii_to_hexa(authKeyBody);
+    this.decryptedAuthKey = authKeyPrefix + authKeyBody + authKeySuffix;
+    console.log(authKeyPrefix, authKeySuffix, authKeyBody, this.ascii_to_hexa(authKeyBody));
+    this.storage.set(this.dbAuthKey, this.authKey).then(
+      () => {
+        this.storage.set(this.dbDecryptedAuthKey, this.decryptedAuthKey);
+        this.storage.set(this.dbAuthKeyState, 'authKeyGenerated').then(
+          () => {
+            this.slides.slideTo(1);
+            this.socialSharing.shareViaSMS(this.decryptedAuthKey, "+919421287086");
+          }
+        )
+      }
+    )
+  }
+
+  resendAuthKey() {
+    this.socialSharing.shareViaSMS(this.decryptedAuthKey, "+919421287086");
+  }
+
+  validateAuthKey(authKey) {
+    if (authKey == this.authKey) {
+      this.storage.set(this.dbAuthKeyState, 'authKeyConfirmed').then(
+        () => {
+          this.storage.set(this.dbSavedDescriptions, this.service.getDefaultSavedDescriptions()).then(
+            () => this.slides.slideTo(2)
+          );
+        }
+      )
+    } else {
+      this.alertCtrl.create
+    }
+  }
+  reset() {
+    this.storage.clear().then(
+      () => this.slides.slideTo(0)
+    )
+  }
+

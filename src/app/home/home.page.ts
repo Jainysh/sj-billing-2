@@ -84,19 +84,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
     public service: ServiceService, private socialSharing: SocialSharing, private platform: Platform,
     // private localNotifications: LocalNotifications 
   ) {
-
-    this.storage.get(this.dbAppInitialized).then((val) => {
-      if (!val || val !== 'yes') {
-        this.initialState();
-      }
-    }
-    ).catch(
-      error => {
-        console.log(error);
-        this.service.presentToast('Error in initializing App' + error);
-      }
-    )
-
     this.storage.get(this.dbVoucherNo).then((val) => {
       this.voucherNo = val ? +val : 1
     }).catch(
@@ -140,23 +127,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   }
 
-
-  async initialState() {
-    console.log('initialize inside home.ts');
-
-    // const loader = await this.loadingCtrl.create({
-    //   message: 'Initializing app...'
-    // });
-    // loader.present();
-    // setTimeout(() => {
-    // loader.dismiss();
-    //  this.router.navigate(['/intro']);
-    // }, 1000);
-  }
   public getSavedDescription(inputValue): void {
     let abc = inputValue; // this.itemForm.value.description;
-    console.log(abc);
-    
     if (abc && abc.length) {
       if (this.category === 'Gold') {
         this.descriptions = this.goldSavedDescriptions.filter((element) => {

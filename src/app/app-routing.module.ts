@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: './home/home.module#HomePageModule',
-   // canActivate: [InitializeGuard]
+    canActivate: [InitializeGuard]
   },
   { path: 'sms', loadChildren: './sms/sms.module#SmsPageModule' },
   { path: 'preferences', loadChildren: './preferences/preferences.module#PreferencesPageModule' },
@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'add-sms-numbers', loadChildren: './add-sms-numbers/add-sms-numbers.module#AddSmsNumbersPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'saved-descriptions', loadChildren: './saved-descriptions/saved-descriptions.module#SavedDescriptionsPageModule' },
-//  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' }
+  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' }
 ];
 
 @NgModule({

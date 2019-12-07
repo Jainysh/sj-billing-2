@@ -96,13 +96,13 @@ Thank you for shopping with us!`;
           text: 'SMS',
           icon: 'text',
           handler: () => {
-            console.log('Delete clicked');
+            // console.log('Delete clicked');
           }
         }, {
           text: 'Whatsapp',
           icon: 'logo-whatsapp',
           handler: () => {
-            console.log('Share clicked');
+            // console.log('Share clicked');
           }
         }]
       });

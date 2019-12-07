@@ -16,7 +16,7 @@ export class ViewBillPage {
   dbBillDetails: string = 'bill';
 
   printBill(bill: Bill) {
-    console.log(bill)
+    // console.log(bill)
     this.service.selectPageSize(bill);
   }
 
@@ -30,7 +30,7 @@ export class ViewBillPage {
         this.bills = [...val];
         service.presentToast('Tap on the card to download the bill', 3000)
       }
-      console.log(this.bills)
+      // console.log(this.bills)
     });
 
     //  }, 1200);
