@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Bill } from '../data-model';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage'
@@ -10,19 +10,15 @@ import { ServiceService } from '../service.service';
   templateUrl: './view-bill.page.html',
   styleUrls: ['./view-bill.page.scss'],
 })
-export class ViewBillPage implements OnInit {
+export class ViewBillPage {
 
   bills: Bill[] = [];
   dbBillDetails: string = 'bill';
 
-  showHint: boolean = true;
-
   printBill(bill: Bill) {
     console.log(bill)
-    this.service.makePdf(bill);
+    this.service.selectPageSize(bill);
   }
-
-
 
   constructor(public router: Router, public storage: Storage, public service: ServiceService,
     public toastController: ToastController, public alertCtrl: AlertController) {
@@ -38,10 +34,6 @@ export class ViewBillPage implements OnInit {
     });
 
     //  }, 1200);
-
-  }
-
-  ngOnInit() {
 
   }
 

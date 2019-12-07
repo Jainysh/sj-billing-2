@@ -59,7 +59,7 @@
         <ion-item>
           <ion-label position="fixed">Description</ion-label>
 
-          <ion-input autocapitalize="on" formControlName="description" (keyup)="getSavedDescription()"></ion-input>
+          <ion-input #desc autocapitalize="on" formControlName="description" (keyup)="getSavedDescription(desc.value)"></ion-input>
 
           <ion-button *ngIf="category === 'Gold'" slot="end" fill="clear" (click)="comment()">
             <img [src]="is916Hallmark? '../../assets/imgs/916-enabled.png': '../../assets/imgs/916-disabled.png'"
@@ -95,7 +95,7 @@
 
         <ion-item>
           <ion-label position="fixed">Rate/gm</ion-label>
-          <ion-input formControlName="rate" [value]="categoryRate ? categoryRate : ''" type="number"></ion-input>
+          <ion-input formControlName="rate" type="number"></ion-input>
         </ion-item>
 
 
@@ -170,9 +170,9 @@
       </ion-card>
     </div>
 
-    <div style="margin:0;padding: 0" *ngIf="lesses.length">
+    <div style="margin:0;padding: 0;" *ngIf="lesses.length">
       <ion-card *ngFor="let less of lesses">
-        <ion-item>
+        <ion-item style="color: brown">
           मोड़&nbsp;
           <ion-label text-wrap>{{less.description}}</ion-label>
           <ion-label text-end>₹ {{less.amount}} </ion-label>

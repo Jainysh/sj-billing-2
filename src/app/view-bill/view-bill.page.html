@@ -11,12 +11,8 @@
 
 <ion-content>
   <div *ngIf="bills.length">
-    <!-- <ion-item *ngIf="showHint" color="medium" text-center>
-        Tap on the card to download the bill &nbsp;<ion-icon name="document"></ion-icon>
-    </ion-item> -->
     <ion-card *ngFor="let bill of bills">
       <ion-card-content (click)="printBill(bill)">
-
         <ion-grid >
           <ion-row>
             <ion-col class="ion-align-self-center" style="text-align: center" no-padding size="2">

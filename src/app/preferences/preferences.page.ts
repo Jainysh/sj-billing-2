@@ -17,7 +17,7 @@ export class PreferencesPage {
   presentVoucherNo: number;
   presentGoldRate: number;
   presentSilverRate: number;
-  narration: string = 'abc';
+  narration: string = '';
 
   bills: Bill[] = [];
 
@@ -51,9 +51,9 @@ export class PreferencesPage {
       (error) => this.service.presentToast('Error in getting Bill data ' + error)
     );
     this.storage.get(this.dbNarration).then((val) => {
-      this.narration = val;
+      this.narration = val ? val : '';
     }).catch(
-      (error) => this.service.presentToast('Error in getting Silver Rate' + error)
+      (error) => this.service.presentToast('Error in getting Narration' + error)
     );
   }
 
@@ -185,7 +185,7 @@ export class PreferencesPage {
     )
   }
 
-  resetNarration(){
+  resetNarration() {
     this.narration = '';
     this.updateNarration();
   }
