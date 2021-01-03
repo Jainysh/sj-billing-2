@@ -27,6 +27,20 @@ export class HomePage implements AfterViewInit, OnDestroy {
    * gold, silver rate set and suggestion library loaded, isAppInitialized = true
    *
    */
+
+
+  /**
+   * 
+   * 
+   * double tab issue
+   * new item control to category selection
+   * suggestion improvement
+   * page size from settings and remove size prompt
+   * saving draft
+   * reset bills
+   * 
+   */
+
   @ViewChild('weightTag') weightTag;
   @ViewChild('makingRateTag') makingRateTag;
   //db storage keys
@@ -37,6 +51,9 @@ export class HomePage implements AfterViewInit, OnDestroy {
   dbSavedDescriptions: string = 'savedDescriptions';
   dbNarration: string = 'narration';
   dbAppInitialized: string = 'isAppInitialized';
+  // dbPrintPageSize: string = 'printPageSize';
+
+  // selectedPage6x4: boolean = false;
   isWhatsapp: boolean = false;
   is916Hallmark: boolean = false;
 
@@ -46,8 +63,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
   otherFill = "outline";
 
   billClear: boolean = true;
-  public itemForm: FormGroup;
-  public lessForm: FormGroup;
+  itemForm: FormGroup;
+  lessForm: FormGroup;
 
   narration: string = '';
 
@@ -56,6 +73,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   voucherNo: number = 1;
   today: string = new Date().toISOString();
   custAddress: string = 'Jaysingpur';
+  // pageSize = '';
   //itemCategorySelected: boolean = false;
   currentDescription: string = '';
   category: string = '';
@@ -89,6 +107,13 @@ export class HomePage implements AfterViewInit, OnDestroy {
     }).catch(
       error => this.service.presentToast('Error in getting voucher data' + error)
     );
+
+    // this.storage.get(this.dbPrintPageSize).then((val) => {
+    //   console.log('val is ', val);
+
+    //   this.pageSize = val;
+    //   this.selectedPage6x4 = val === '6x4' ? true : false
+    // })
 
     this.storage.get(this.dbSavedDescriptions).then((val) => {
       this.goldSavedDescriptions = val ? val.filter(element => element.category === 'Gold') : [];
@@ -295,6 +320,10 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.isNewBillingItem = !this.isNewBillingItem;
   }
 
+  resetBill() {
+
+  }
+
   getAmount(makingTagGross, weightTagLess): number {
     let abc = this.itemForm.value;
     let weight: number = 0;
@@ -319,11 +348,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
       (val) => {
         if (val) {
           this.voucherNo = +val;
+          this.voucherNo++;
         }
         else {
           this.voucherNo = 1;
         }
-        this.storage.set(this.dbVoucherNo, this.voucherNo + 1)
+        this.storage.set(this.dbVoucherNo, this.voucherNo)
       }
     ).catch(
       (error) => this.service.presentToast('Failed to load voucher number. Using default')
@@ -357,12 +387,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
           () => {
             this.service.presentToast('Bill Saved Successfully');
             this.addBill();
-            this.resetForms();
-            this.service.selectPageSize(this.bill);
+            //   this.resetForms();  DO NOT RESET BILL DATA ON FINISHING BILL
+            // this.service.makePdf(this.bill, this.pageSize);
+            this.service.makePdf(this.bill, '6x4');
+            //      this.service.selectPageSize(this.bill, this.pageSize);
           }
-        ).catch(
-          (error) => this.service.presentToast(`Error in saving bill\n${error}`)
-        )
+        ).catch(error => this.service.presentToast(`Error in saving bill ${error}`))
       }
       else {
         bill.push(this.bill);
@@ -370,11 +400,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
           () => {
             this.service.presentToast('Bill Saved Successfully');
             this.addBill();
-            this.resetForms();
-            this.service.selectPageSize(this.bill);
+            this.service.makePdf(this.bill, '6x4');
+            // this.service.selectPageSize(this.bill, this.pageSize);
+            // this.resetForms();
           }
         ).catch(
-          (error) => this.service.presentToast(`Error in saving bill\n${error}`)
+          (error) => this.service.presentToast(`Error in saving bill ${error}`)
         )
       }
     }
@@ -385,7 +416,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   resetForms() {
     this.itemForm.reset(
-      { address: 'Jaysingur' }
+      { address: 'Jaysingpur' }
     );
     this.lessForm.reset();
     this.items = [];

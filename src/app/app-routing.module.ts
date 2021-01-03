@@ -20,7 +20,8 @@ const routes: Routes = [
   { path: 'add-sms-numbers', loadChildren: './add-sms-numbers/add-sms-numbers.module#AddSmsNumbersPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'saved-descriptions', loadChildren: './saved-descriptions/saved-descriptions.module#SavedDescriptionsPageModule' },
-  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' }
+  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' },
+  { path: 'reports', loadChildren: './reports/reports.module#ReportsPageModule' }
 ];
 
 @NgModule({

@@ -9,40 +9,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div *ngIf="bills.length">
-    <ion-card *ngFor="let bill of bills">
-      <ion-card-content (click)="printBill(bill)">
-        <ion-grid >
-          <ion-row>
-            <ion-col class="ion-align-self-center" style="text-align: center" no-padding size="2">
-              <h1>
-               <ion-icon name="list"></ion-icon> {{bill.voucherNo}}
-              </h1>
-            </ion-col>
-            <ion-col style="padding-left: 5%; margin-left: 5%">
-              <h2><strong>{{bill.date | date : 'short'}}</strong></h2>
-              <h3> ₹ {{bill.totalAmount}}</h3>
-              <h3>{{bill.billClear? "Paid" : "Pending : "+bill.outstandingAmount}}</h3>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-  </div>
-  <div *ngIf="!bills.length">
-    <ion-card style="transform: translate(0%, 25%);">
-      <ion-card-content>
-        <img src="../../assets/imgs/noBillImage.png" width="100%" alt="No Bills to Display!">
-        <ion-item>
-          Add a new bill
-        </ion-item>
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button color="light" (click)="goToBilling()">
-            <ion-icon name="add"></ion-icon>
-          </ion-fab-button>
-        </ion-fab>
-      </ion-card-content>
-    </ion-card>
-  </div>
-</ion-content>
+<!-- <ion-content> -->
+    <div *ngIf="bills.length">
+        <ion-card *ngFor="let bill of bills">
+          <ion-card-content (click)="printBill(bill)">
+            <ion-grid >
+              <ion-row>
+                <ion-col class="ion-align-self-center" style="text-align: center" class="ion-no-padding" size="2">
+                  <h1>
+                   <ion-icon name="list"></ion-icon> {{bill.voucherNo}}
+                  </h1>
+                </ion-col>
+                <ion-col style="padding-left: 5%; margin-left: 5%">
+                  <h2><strong>{{bill.date | date : 'short'}}</strong></h2>
+                  <h3> ₹ {{bill.totalAmount}}</h3>
+                  <h3>{{bill.billClear? "Paid" : "Pending : "+bill.outstandingAmount}}</h3>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <div *ngIf="!bills.length">
+        <ion-card style="transform: translate(0%, 25%);">
+          <ion-card-content>
+            <img src="../../assets/imgs/noBillImage.png" width="100%" alt="No Bills to Display!">
+            <ion-item>
+              Add a new bill
+            </ion-item>
+            <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+              <ion-fab-button color="light" (click)="goToBilling()">
+                <ion-icon name="add"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </ion-card-content>
+        </ion-card>
+      </div>
+<!-- </ion-content> -->

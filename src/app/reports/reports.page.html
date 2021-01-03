@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Reports
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div *ngIf="bills.length">
+    <!-- <ion-card> -->
+    <!-- <ion-card-header>
+        <ion-card-title>Bills</ion-card-title>
+      </ion-card-header> -->
+    <ion-list>
+      <ion-item>
+        {{bills && bills.length ? bills.length + ' bills': 'No bills'}}
+      </ion-item>
+      <ion-buttons>
+        <!-- <ion-button [disabled]="bills.length === 0" (click)="exportToExcel()" style="width: 30%" fill="clear"
+          size="default">
+          Export
+        </ion-button> -->
+        <ion-button disabled="true" (click)="exportToExcel()" style="width: 30%" fill="clear"
+        size="default">
+        Export
+      </ion-button>
+        <ion-button [disabled]="bills.length === 0" (click)="resetBills()" style="width: 30%" fill="clear"
+          size="default">
+          Delete
+        </ion-button>
+        <ion-button>
+          <ion-icon name="ios-funnel"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+    </ion-list>
+    <!-- </ion-card> -->
+    <ion-card *ngFor="let bill of bills">
+      <ion-card-content (click)="printBill(bill)">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="ion-align-self-center" style="text-align: center" class="ion-no-padding" size="2">
+              <h1>
+                <ion-icon name="list"></ion-icon> {{bill.voucherNo}}
+              </h1>
+            </ion-col>
+            <ion-col style="padding-left: 5%; margin-left: 5%">
+              <h2><strong>{{bill.date | date : 'short'}}</strong></h2>
+              <h3> ₹ {{bill.totalAmount}}</h3>
+              <h3>{{bill.billClear? "Paid" : "Pending : "+bill.outstandingAmount}}</h3>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-card (click)="goToBilling()" *ngIf="!bills.length">
+    <ion-card-content>
+      <img src="../../assets/imgs/noBillImage.png" width="100%" alt="No Bills to Display!">
+      <ion-button fill="clear" size="full">
+        Tap to add new bill
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

@@ -1,0 +1,62 @@
+<ion-content>
+  <!-- <ion-slides pager="true" [options]="slideOpts" #slides> -->
+  <!-- <ion-slide>
+      <div>
+        <h1>One Time App Authentication Needed</h1>
+
+        <div style="text-align: left">
+          <ul>
+            <li>
+              Click on Begin button and allow to send key via sms
+            </li>
+            <li>
+              Enter OTP
+            </li>
+            <li>Enter Gold Rate</li>
+            <li>Enter Silver Rate</li>
+            <li>Launch Application</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="position: absolute; bottom: 10%">
+        <ion-button (click)="generateAuthKey()">Begin</ion-button>
+      </div>
+
+    </ion-slide>
+    <ion-slide>
+      <div>
+        <ion-input style="width: 100vw; font-size: 30px; overflow: visible;
+        word-wrap: break-word;" #authKey placeholder="Tap here to enter OTP"></ion-input><br />
+        <div style="position: absolute; bottom: 10%">
+          <ion-button (click)="validateAuthKey(authKey.value)">Submit OTP</ion-button>
+          <ion-button (click)="resendAuthKey()">Send Again</ion-button>
+          <ion-button (click)="reset()">Reset Process</ion-button>
+        </div>
+      </div>
+
+    </ion-slide> -->
+  <!-- <ion-slide> -->
+  <!-- <div> -->
+  <img src="assets/imgs/welcome.png" alt="">
+  <ion-card>
+    <ion-item>
+      <ion-label>Gold Rate</ion-label>
+      <ion-input #goldRate type="number" placeholder="per gram"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Silver Rate</ion-label>
+      <ion-input #silverRate type="number" placeholder="per gram"></ion-input>
+    </ion-item>
+    <!-- <ion-item>
+      <ion-label>Default Page Size {{selectedPage6x4}}</ion-label>
+      A5<ion-toggle (ionChange)="updatePageSize()" [ngModel]="selectedPage6x4"></ion-toggle>6x4
+    </ion-item> -->
+  </ion-card>
+  <ion-button expand="block" [disabled]="!goldRate.value || !silverRate.value"
+    (click)="setRate(goldRate.value, silverRate.value)">Launch App</ion-button>
+  <!-- </div> -->
+  <!-- </ion-slide>
+
+  </ion-slides> -->
+</ion-content>

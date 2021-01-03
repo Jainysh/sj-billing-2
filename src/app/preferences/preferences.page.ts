@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-// import * as XLSX from 'xlsx';
-import { File } from '@ionic-native/file/ngx';
 import { AlertController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { Bill } from '../data-model';
 import { ServiceService } from '../service.service';
 
 @Component({
@@ -18,132 +15,51 @@ export class PreferencesPage {
   presentGoldRate: number;
   presentSilverRate: number;
   narration: string = '';
-
-  bills: Bill[] = [];
+  selectedPage6x4: boolean = false;
 
   dbVoucherNo: string = 'voucherNo';
   dbGoldRate: string = 'goldRate';
   dbSilverRate: string = 'silverRate'
   dbBillDetails: string = 'bill';
   dbNarration: string = 'narration';
+  // dbPrintPageSize: string = 'printPageSize';
 
-  constructor(public navCtrl: NavController, public file: File, public alertController: AlertController,
+  constructor(public navCtrl: NavController, public alertController: AlertController,
     private storage: Storage, private service: ServiceService, public router: Router) {
-    this.storage.get(this.dbVoucherNo).then((val) => {
-      this.presentVoucherNo = +val
-    }).catch(
+    this.storage.get(this.dbVoucherNo).then((val) => this.presentVoucherNo = +val).catch(
       (error) => this.service.presentToast('Error in getting Voucher data ' + error)
     );
-    this.storage.get(this.dbGoldRate).then((val) => {
-      this.presentGoldRate = +val
-    }).catch(
+    this.storage.get(this.dbGoldRate).then((val) => this.presentGoldRate = +val).catch(
       (error) => this.service.presentToast('Error in getting Gold Rate' + error)
     );
-    this.storage.get(this.dbSilverRate).then((val) => {
-      this.presentSilverRate = +val
-    }).catch(
+    this.storage.get(this.dbSilverRate).then((val) => this.presentSilverRate = +val).catch(
       (error) => this.service.presentToast('Error in getting Silver Rate' + error)
     );
-    this.storage.get(this.dbBillDetails).then((val) => {
-      if (val && val.length)
-        this.bills = [...val];
-    }).catch(
-      (error) => this.service.presentToast('Error in getting Bill data ' + error)
-    );
-    this.storage.get(this.dbNarration).then((val) => {
-      this.narration = val ? val : '';
-    }).catch(
+    this.storage.get(this.dbNarration).then((val) => this.narration = val ? val : '').catch(
       (error) => this.service.presentToast('Error in getting Narration' + error)
     );
+
+
+    // this.storage.get(this.dbPrintPageSize).then((val) => {
+    //   // this.pageSize = val;
+    //   this.selectedPage6x4 = val === '6x4' ? true : false
+    // })
+
+   //  debugger;
+  //   this.storage.get(this.dbPrintPageSize).then((val) => {
+  //     console.log('here')
+  //     this.selectedPage6x4 = val === '6x4' ? true : false;
+  // console.log(val);
+  // }).catch(
+  //     (error) => this.service.presentToast('Error in getting default page size, selected 6x4')
+  //   )
   }
 
-  // excel export function
-  getStoragePath() {
-    let file = this.file;
-    return this.file.resolveDirectoryUrl(this.file.externalRootDirectory).then(function (directoryEntry) {
-      return file.getDirectory(directoryEntry, "Ionic2ExportToXLSX", {
-        create: true,
-        exclusive: false
-      }).then(function () {
-        return directoryEntry.nativeURL + "Ionic2ExportToXLSX/";
-      });
-    });
-  }
-
-  viewBills() {
-    this.router.navigate(['/view-bill']);
-  }
   // await alertConfirmBox()
 
   goToSavedDescriptions() {
     this.router.navigate(['/saved-descriptions']);
   }
-
-  async resetBills() {
-    const alert = await this.alertController.create({
-      header: 'Confirm!',
-      message: 'This will <strong>clear</strong> all bill data!!!',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            //  console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            this.storage.remove(this.dbBillDetails).then(() => {
-              this.bills = [];
-              this.storage.set(this.dbVoucherNo, 1).then(
-                () => this.presentVoucherNo = 1
-              )
-              this.service.presentToast("Success! Bills cleared. Voucher number updated to 1")
-            }).catch(
-              (error) => this.service.presentToast('Something went wrong! Try again')
-            );
-            //  console.log('Confirm Okay');
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  // exportToExcel() {
-  //   let sheet = XLSX.utils.json_to_sheet(this.bills);
-  //   let book = {
-  //     SheetNames: ["export"],
-  //     Sheets: {
-  //       "export": sheet
-  //     }
-  //   };
-
-  //   let wbout = XLSX.write(book, {
-  //     bookType: 'xlsx',
-  //     bookSST: false,
-  //     type: 'binary'
-  //   });
-  //   function s2ab(s) {
-  //     let buf = new ArrayBuffer(s.length);
-  //     let view = new Uint8Array(buf);
-  //     for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-  //     return buf;
-  //   }
-
-  //   let blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
-
-  //   this.getStoragePath().then(function (url) {
-  //     this.file.writeFile(url, "export.xlsx", blob, true).then(() => {
-  //      this.presentToast("file created at: " + url);
-  //     }).catch(() => {
-  //      this.presentToast("error creating file at :" + url);
-  //     });
-  //   }).catch((error)=>this.presentToast('Error in getting storage path '+error));
-
-  //   // console.log("exported")
-  // }
 
   updateVoucherNo(voucherNo: number) {
     this.storage.set(this.dbVoucherNo, voucherNo).then(
@@ -154,6 +70,13 @@ export class PreferencesPage {
       }
     )
   }
+
+  // updatePageSize() {
+  //   this.selectedPage6x4 = !this.selectedPage6x4;
+  //   this.storage.set(this.dbPrintPageSize, this.selectedPage6x4 ? '6x4' : 'A5').then(
+  //     () => this.service.presentToast(`Paper size set to ${this.selectedPage6x4 ? '6x4' : 'A5'}`)
+  //   )
+  // }
 
   updateGold(rate: number) {
     this.storage.set(this.dbGoldRate, rate).then(
@@ -177,9 +100,7 @@ export class PreferencesPage {
 
   updateNarration() {
     this.storage.set(this.dbNarration, this.narration).then(
-      () => {
-        this.service.presentToast('Success.');
-      }
+      () => this.service.presentToast('Success. Narration updated.')
     ).catch(
       error => this.service.presentToast('Error' + error)
     )
