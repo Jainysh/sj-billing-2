@@ -14,7 +14,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-
+import { Brightness } from '@ionic-native/brightness/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -31,6 +31,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
     File,
     FileOpener,
     SocialSharing,
+    Brightness,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

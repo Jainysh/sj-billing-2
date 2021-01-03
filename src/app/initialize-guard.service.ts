@@ -19,24 +19,15 @@ export class InitializeGuard implements CanActivate {
         let voucherNo = await this.storage.get(dbDataKeys.dbVoucherNo);
 
         let data = []
-        console.log('1');
-
         Object.keys(dbDataKeys).forEach(key => {
-            {
-                console.log('2', key, typeof key);
-                this.storage.get(key.toString()).then(value => {
-                    data.push(value);
-                    console.log(data, value, key);
-                }
-                );
-            }
+            this.storage.get(key.toString()).then(value => {
+                data.push(value);
+            });
         });
-        console.log('4');
+        // this.storage.get(dbDataKeys.dbGoldRate).then(
+        //     data => // console.log(data, '5')
 
-        this.storage.get(dbDataKeys.dbGoldRate).then(
-            data => console.log(data, '5')
-
-        )
+        // )
 
         // dbDataKeys.forEach(element => {
 
@@ -49,22 +40,14 @@ export class InitializeGuard implements CanActivate {
             // await this.storage.get(dbDataKeys.dbPrintPageSize),
             // await this.storage.get(dbDataKeys.dbVoucherNo)]
             // console.log(data);
-
         }
-        console.log(data);
-
-
         let newDb = await this.storage.get('newKey');
 
         const undefinedArray = [appInitialized, goldRate, silverRate, printPageSize, voucherNo, newDb].map(
             (ele, index) => {
-                console.log(ele);
                 if (!ele || ele == null) return index;
             })
         // .filter(ele => ele);
-
-        console.log(undefinedArray);
-
         return true;
         // if (undefinedArray.length) {
         //     console.log('here');

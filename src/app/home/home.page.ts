@@ -6,7 +6,8 @@ import { Bill, Item, Less, SavedDescription } from '../data-model';
 import { Storage } from '@ionic/storage';
 import { ServiceService } from '../service.service';
 // import { LocalNotifications } from '@ionic-native/local-notifications';
-import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+// import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Brightness } from '@ionic-native/brightness/ngx';
 
 @Component({
   selector: 'app-home',
@@ -43,6 +44,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   @ViewChild('weightTag') weightTag;
   @ViewChild('makingRateTag') makingRateTag;
+  @ViewChild('oldValue') oldValue;
   //db storage keys
   dbVoucherNo: string = 'voucherNo';
   dbBillDetails: string = 'bill';
@@ -56,6 +58,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   // selectedPage6x4: boolean = false;
   isWhatsapp: boolean = false;
   is916Hallmark: boolean = false;
+  showQR = false;
 
   // html attributes
   goldFill = "outline";
@@ -81,6 +84,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   makingType: string = '/gram';
   weight: number = 0
 
+  userBrightness: number = -1;
   backButtonSubscription;
 
   bill: Bill = null;
@@ -99,8 +103,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder, public navCtrl: NavController, private storage: Storage,
     private toastController: ToastController, public loadingCtrl: LoadingController, public router: Router,
-    public service: ServiceService, private socialSharing: SocialSharing, private platform: Platform,
-    // private localNotifications: LocalNotifications 
+    public service: ServiceService, private platform: Platform, private brightness: Brightness
+    // private localNotifications: LocalNotifications , private socialSharing: SocialSharing, 
   ) {
     this.storage.get(this.dbVoucherNo).then((val) => {
       this.voucherNo = val ? +val : 1
@@ -114,6 +118,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
     //   this.pageSize = val;
     //   this.selectedPage6x4 = val === '6x4' ? true : false
     // })
+    this.brightness.getBrightness().then(data => this.userBrightness = data);
 
     this.storage.get(this.dbSavedDescriptions).then((val) => {
       this.goldSavedDescriptions = val ? val.filter(element => element.category === 'Gold') : [];
@@ -150,6 +155,13 @@ export class HomePage implements AfterViewInit, OnDestroy {
       amount: []
     });
 
+  }
+
+  showQRCode(): void {
+    this.showQR = !this.showQR;
+    if (this.userBrightness > 0) {
+      this.brightness.setBrightness(!this.showQR ? this.userBrightness : 0.9)
+    }
   }
 
   public getSavedDescription(inputValue): void {
@@ -305,7 +317,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.toggleBill();
   }
 
-  addNewLess() {
+  addNewLess(addMore?: boolean) {
     let abc = this.lessForm.value;
     this.lesses.push({
       id: this.lessCounter++,
@@ -313,7 +325,11 @@ export class HomePage implements AfterViewInit, OnDestroy {
       amount: abc.amount
     })
     this.lessForm.reset();
-    this.toggleBill();
+    if (!addMore) {
+      this.toggleBill();
+    } else {
+      setTimeout(() => this.oldValue.setFocus(), 100);
+    }
   }
 
   toggleBill() {

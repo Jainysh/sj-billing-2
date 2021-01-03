@@ -7,7 +7,10 @@
       शंखेश्वर ज्वेलर्स
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="resetForms()" fill="clear">
+      <ion-button (click)="showQRCode()" fill="clear">
+        <ion-icon [name]="!showQR ? 'aperture': 'arrow-back'"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!showQR" (click)="resetForms()" fill="clear">
         <ion-icon name="refresh"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -16,7 +19,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="!showQR">
     <ion-grid>
       <ion-row>
         <ion-col width-50>
@@ -65,7 +68,8 @@
         <ion-item>
           <ion-label position="fixed">Description</ion-label>
 
-          <ion-input #desc autocapitalize="on" formControlName="description" (keyup)="getSavedDescription(desc.value)"></ion-input>
+          <ion-input #desc autocapitalize="on" formControlName="description" (keyup)="getSavedDescription(desc.value)">
+          </ion-input>
 
           <ion-button *ngIf="category === 'Gold'" slot="end" fill="clear" (click)="comment()">
             <img [src]="is916Hallmark? '../../assets/imgs/916-enabled.png': '../../assets/imgs/916-disabled.png'"
@@ -77,7 +81,8 @@
           <ion-item color="light" *ngFor="let d of descriptions" (click)="saveSearchedItem(d.description)">
             <i>
               {{d.description}}
-            </i> </ion-item>
+            </i>
+          </ion-item>
         </ion-list>
 
         <ion-item>
@@ -150,21 +155,16 @@
           <ion-input formControlName="amount" #oldValue type="number"></ion-input>
         </ion-item>
 
-        <ion-button [disabled]="!oldValue.value" fill="solid" expand="full" (click)="addNewLess()">Save
-        </ion-button>
-
-        <!-- <ion-item>
-          <ion-button size="default" class="ion-text-wrap" fill="solid"
-            (click)="addNewItem(makingRateTag.checked, weightTag.checked)" style="width:45%">
-            <ion-icon name="add"></ion-icon>
-            &nbsp; New Item
+        <ion-item>
+          <ion-button [disabled]="!oldValue.value" size="default" class="ion-text-wrap" fill="solid"
+            (click)="addNewLess(true)" style="width:45%">
+            <ion-icon name="add"></ion-icon> &nbsp; Add more
           </ion-button>
-          <ion-button size="default" class="ion-text-wrap" fill="outline"
-            (click)="goToLessBill(makingRateTag.checked, weightTag.checked)" style="width:45%; font-size: 100%">
-            <ion-icon name="remove"></ion-icon>
-            &nbsp;मोड़
+          <ion-button [disabled]="!oldValue.value" size="default" class="ion-text-wrap" fill="outline"
+            (click)="addNewLess(false)" style="width:45%">
+            Save
           </ion-button>
-        </ion-item> -->
+        </ion-item>
       </form>
     </ion-card>
 
@@ -240,6 +240,12 @@
     </ion-button>
 
   </ion-list>
+  <div (click)="showQRCode()" class="qr-container">
+    <div>
+      <span class="qr-help-text">Tap anywhere on screen to close QR</span>
+      <img class="qr-code" *ngIf="showQR" src="../../assets/imgs/BharatPe_QR.jpeg">
+    </div>
+  </div>
 </ion-content>
 
 
