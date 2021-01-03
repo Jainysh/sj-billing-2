@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
 
-import { ViewBillPage } from './view-bill.page';
+import { ReportsPage } from './reports.page';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ViewBillPage
+    component: ReportsPage
   }
 ];
 
@@ -21,7 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ViewBillPage],
-  // exports: [ViewBillPage]
+  declarations: [ReportsPage, AnalyticsComponent]
 })
-export class ViewBillPageModule { }
+export class ReportsPageModule { }

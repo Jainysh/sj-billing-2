@@ -18,7 +18,6 @@ export class LoginPage implements OnInit, AfterViewInit, OnDestroy {
     private menu: MenuController, private platform: Platform) {
     this.menu.enable(false);
     this.backButtonSubscription = this.platform.backButton.subscribeWithPriority(0, () => {
-      console.log("login back pressed");
       navigator['app'].exitApp();
     });
     /**

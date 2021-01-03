@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AddSmsNumbersPage } from './add-sms-numbers.page';
+import { IntroPage } from './intro.page';
 
-describe('AddSmsNumbersPage', () => {
-  let component: AddSmsNumbersPage;
-  let fixture: ComponentFixture<AddSmsNumbersPage>;
+describe('IntroPage', () => {
+  let component: IntroPage;
+  let fixture: ComponentFixture<IntroPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddSmsNumbersPage ],
+      declarations: [ IntroPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddSmsNumbersPage);
+    fixture = TestBed.createComponent(IntroPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

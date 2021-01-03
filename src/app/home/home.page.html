@@ -6,6 +6,13 @@
     <ion-title>
       शंखेश्वर ज्वेलर्स
     </ion-title>
+    <ion-buttons slot="end">
+
+      <ion-button (click)="resetForms()" fill="clear">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +27,8 @@
         </ion-col>
         <ion-col width-50>
           <ion-item>
-            <ion-icon name="md-calendar"></ion-icon>
+            <ion-icon name="calendar-outline"></ion-icon>
+            &nbsp;
             <ion-datetime [(ngModel)]="today"></ion-datetime>
           </ion-item>
         </ion-col>
@@ -29,7 +37,7 @@
     <form [formGroup]='itemForm'>
       <ion-item>
         <ion-label position="fixed">Name</ion-label>
-        <ion-input autofocus="true" autocapitalize="on" formControlName="name" type="text"></ion-input>
+        <ion-input autofocus="true" autocapitalize="words" formControlName="name" type="text"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="fixed">Address</ion-label>
@@ -44,22 +52,23 @@
         </ion-button>
       </ion-item>
       <ion-card style="border: 1px; border-color: black" *ngIf="isNewBillingItem">
-        <div style="padding-left : 6%; padding-right: 6%; padding-top: 3%; padding-bottom: 0px; margin-bottom: 0px">
-          <ion-button size="default" [fill]="goldFill" (click)="categorySelected('Gold')" style="width:22%">
+        <ion-item>
+          <ion-button size="default" [fill]="goldFill" (click)="categorySelected('Gold')" style="width: 24%;">
             Gold</ion-button>
-          <ion-button size="default" [fill]="silverFill" (click)="categorySelected('Silver')" style="width:22%">Silver
+          <ion-button size="default" [fill]="silverFill" (click)="categorySelected('Silver')" style="width: 24%;">Silver
           </ion-button>
-          <ion-button size="default" [fill]="otherFill" (click)="categorySelected('')" style="width:22%">
+          <ion-button size="default" [fill]="otherFill" (click)="categorySelected('')" style="width: 24%;">
             Other</ion-button>
           <ion-button size="default" fill="solid" color="dark" (click)="toggleBill()"
-            style="width:22%; font-size: 100%">मोड़
+            style="width: 24%; font-size: 100%">
+            मोड़
           </ion-button>
-        </div>
+        </ion-item>
 
         <ion-item>
           <ion-label position="fixed">Description</ion-label>
-
-          <ion-input #desc autocapitalize="on" formControlName="description" (keyup)="getSavedDescription(desc.value)"></ion-input>
+          <ion-input #desc autocapitalize="on" formControlName="description" (keyup)="getSavedDescription(desc.value)">
+          </ion-input>
 
           <ion-button *ngIf="category === 'Gold'" slot="end" fill="clear" (click)="comment()">
             <img [src]="is916Hallmark? '../../assets/imgs/916-enabled.png': '../../assets/imgs/916-disabled.png'"
@@ -71,7 +80,8 @@
           <ion-item color="light" *ngFor="let d of descriptions" (click)="saveSearchedItem(d.description)">
             <i>
               {{d.description}}
-            </i> </ion-item>
+            </i>
+          </ion-item>
         </ion-list>
 
         <ion-item>
@@ -112,12 +122,12 @@
             formControlName="amount" type="number"></ion-input>
         </ion-item>
         <ion-item *ngIf="amount.value">
-          <ion-button size="default" text-wrap fill="solid"
+          <ion-button size="default" class="ion-text-wrap" fill="solid"
             (click)="addNewItem(makingRateTag.checked, weightTag.checked)" style="width:45%">
             <ion-icon name="add"></ion-icon>
             &nbsp; New Item
           </ion-button>
-          <ion-button size="default" text-wrap fill="outline"
+          <ion-button size="default" class="ion-text-wrap" fill="outline"
             (click)="goToLessBill(makingRateTag.checked, weightTag.checked)" style="width:45%; font-size: 100%">
             <ion-icon name="remove"></ion-icon>
             &nbsp;मोड़
@@ -135,9 +145,6 @@
 
         </ion-item>
         <ion-item>
-
-
-
           <ion-label position="fixed">Description</ion-label>
           <ion-input autocapitalize="on" formControlName="description" #oldDescription type="text"></ion-input>
         </ion-item>
@@ -147,15 +154,23 @@
           <ion-input formControlName="amount" #oldValue type="number"></ion-input>
         </ion-item>
 
-        <ion-button [disabled]="!oldValue.value" fill="solid" expand="full" (click)="addNewLess()">Save
-        </ion-button>
+        <ion-item>
+          <ion-button [disabled]="!oldValue.value" size="default" class="ion-text-wrap" fill="solid"
+            (click)="addNewLess(true)" style="width:45%">
+            <ion-icon name="add"></ion-icon> &nbsp; Add more
+          </ion-button>
+          <ion-button [disabled]="!oldValue.value" size="default" class="ion-text-wrap" fill="outline"
+            (click)="addNewLess(false)" style="width:45%">
+            Save
+          </ion-button>
+        </ion-item>
       </form>
     </ion-card>
 
     <div style="padding:0; margin:0" *ngIf="items.length">
       <ion-card *ngFor="let item of items">
         <ion-item>
-          <ion-label text-wrap>{{item.description}}</ion-label>
+          <ion-label class="ion-text-wrap">{{item.description}}</ion-label>
           <ion-label> {{item.nettWeight}} gm </ion-label>
           <ion-label>₹ {{item.amount}} </ion-label>
 
@@ -174,8 +189,8 @@
       <ion-card *ngFor="let less of lesses">
         <ion-item style="color: brown">
           मोड़&nbsp;
-          <ion-label text-wrap>{{less.description}}</ion-label>
-          <ion-label text-end>₹ {{less.amount}} </ion-label>
+          <ion-label class="ion-text-wrap">{{less.description}}</ion-label>
+          <ion-label class="ion-text-end">₹ {{less.amount}} </ion-label>
 
           <!-- <ion-button fill="clear" size="default" color="dark">
             <ion-icon name="create"></ion-icon>
@@ -190,16 +205,17 @@
 
     <ion-item *ngIf="lesses.length || items.length">
       <ion-label>Total Bill Amount (₹)</ion-label>
-      <ion-label text-end>{{getTotalAmount()}}</ion-label>
+      <ion-label class="ion-text-end">{{getTotalAmount()}}</ion-label>
     </ion-item>
 
     <ion-item>
       <ion-label>Paid Amount (₹)</ion-label>
-      <ion-input style="text-align: right" #paidAmount type="number" [value]="getTotalAmount()"></ion-input>
+      <ion-input style="text-align: right" color="secondary" #paidAmount type="number" [value]="getTotalAmount()">
+      </ion-input>
     </ion-item>
 
 
-    <ion-grid *ngIf="getTotalAmount() - paidAmount.value > 0" no-padding>
+    <ion-grid *ngIf="getTotalAmount() - paidAmount.value > 0" class="ion-no-padding">
       <ion-row>
         <ion-col width-65>
           <ion-item>
@@ -217,7 +233,7 @@
       </ion-row>
     </ion-grid>
 
-    <ion-button [disabled]="!(lesses.length || items.length)" fill="block" size="default" text-wrap
+    <ion-button [disabled]="!(lesses.length || items.length)" fill="solid" expand="full" class="ion-text-wrap"
       (click)="finishBilling(paidAmount.value)">
       <ion-icon name="checkmark"></ion-icon>&nbsp; Finish Billing
     </ion-button>
@@ -276,7 +292,7 @@
           <ion-input formControlName="description"></ion-input>
         </ion-item>
 
-        <ion-grid no-padding>
+        <ion-grid class="ion-no-padding">
           <ion-row>
             <ion-col width-45>
               <ion-item>
@@ -309,7 +325,7 @@
           <ion-label>Rate/gm</ion-label>
           <ion-input #rate formControlName="rate" [value]="categoryRate ? categoryRate : ''" type="number"></ion-input>
         </ion-item>
-        <ion-grid no-padding>
+        <ion-grid class="ion-no-padding">
           <ion-row>
             <ion-col width-45>
               <ion-item>
@@ -335,15 +351,15 @@
         </ion-item>
 
         <ion-item *ngIf="amount.value">
-          <ion-button default text-wrap outline (click)="addDiscount()" style="width:30%; font-size: 100%">
+          <ion-button default class="ion-text-wrap" outline (click)="addDiscount()" style="width:30%; font-size: 100%">
             <ion-icon name="remove"></ion-icon>
             &nbsp; मोड़
           </ion-button>
-          <ion-button default text-wrap solid (click)="addNewItem()" style="width:30%">
+          <ion-button default class="ion-text-wrap" solid (click)="addNewItem()" style="width:30%">
             <ion-icon name="add"></ion-icon>
             New Item
           </ion-button>
-          <ion-button default text-wrap clear (click)="finishBilling()" style="width:30%">
+          <ion-button default class="ion-text-wrap" clear (click)="finishBilling()" style="width:30%">
             <ion-icon name="checkmark"></ion-icon>&nbsp; Finish Billing
           </ion-button>
         </ion-item>

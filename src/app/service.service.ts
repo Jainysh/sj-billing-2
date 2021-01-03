@@ -50,7 +50,7 @@ export class ServiceService {
     await alert.present();
   }
 
-  async makePdf(bill: Bill, paperSize: string) {
+  async makePdf(bill: Bill, paperSize: string = '6x4') {
     let billBody: any[] = [];
     const loader = await this.loadingCtrl.create({
       message: 'Bill is getting generated...'
@@ -129,7 +129,7 @@ export class ServiceService {
         [
           {
             border: [false, true, false, false],
-            fillColor: '#eeeeee',
+            fillColor: '#ffffff',
             text: totalPurchase.toFixed(0),
             italics: true,
             bold: true,
@@ -138,7 +138,7 @@ export class ServiceService {
           },
           {
             border: [false, true, false, false],
-            fillColor: '#eeeeee',
+            fillColor: '#ffffff',
             text: 'Total Purchase\n ',
             italics: true,
             bold: true,
@@ -147,7 +147,7 @@ export class ServiceService {
           },
           {
             border: [false, true, false, false],
-            fillColor: '#eeeeee',
+            fillColor: '#ffffff',
             text: ''
           }
         ]
@@ -328,7 +328,7 @@ export class ServiceService {
         {
           columns: [
             {
-              text: `\nVoucher No : ${bill.voucherNo}`, alignment: 'left', margin: [0, 0, 0, 5], fontSize: paperSize === 'A5' ? 12 : 10
+              text: `\nEstimate No : ${bill.voucherNo}`, alignment: 'left', margin: [0, 0, 0, 5], fontSize: paperSize === 'A5' ? 12 : 10
             },
             {
               text: `\nDate: ${bill.date.substr(0, 10).split('-')[2] + '/' + bill.date.substr(0, 10).split('-')[1] + '/' + bill.date.substr(0, 4)}`, alignment: 'right',
