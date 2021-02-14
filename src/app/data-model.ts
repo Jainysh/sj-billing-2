@@ -21,7 +21,8 @@ export interface SavedDescription {
 export interface Less {
     id: number,
     amount: number,
-    description: string
+    description: string,
+    type?: string
 }
 
 export interface Bill {

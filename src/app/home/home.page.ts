@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { NavController, ToastController, LoadingController, Platform } from '@ionic/angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { ServiceService } from '../service.service';
   styleUrls: ['home.page.scss'],
 })
 
-export class HomePage implements AfterViewInit, OnDestroy {
+export class HomePage implements OnDestroy {
 
 
   /**
@@ -41,9 +41,9 @@ export class HomePage implements AfterViewInit, OnDestroy {
    * 
    */
 
-  @ViewChild('weightTag') weightTag;
-  @ViewChild('makingRateTag') makingRateTag;
   @ViewChild('oldValue') oldValue;
+
+  isNettWeight = false;
   //db storage keys
   dbVoucherNo: string = 'voucherNo';
   dbBillDetails: string = 'bill';
@@ -72,7 +72,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   isNewBillingItem: boolean = true;
 
   voucherNo: number = 1;
-  today: string = new Date().toISOString();
+  today: string = '';
   custAddress: string = 'Jaysingpur';
   // pageSize = '';
   //itemCategorySelected: boolean = false;
@@ -82,6 +82,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
   makingType: string = '/gram';
   weight: number = 0
   backButtonSubscription;
+
+  // makingRates = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240];
 
   bill: Bill = null;
   items: Item[] = [];
@@ -102,11 +104,10 @@ export class HomePage implements AfterViewInit, OnDestroy {
     public service: ServiceService, private platform: Platform
     // private localNotifications: LocalNotifications , private socialSharing: SocialSharing, 
   ) {
-    this.storage.get(this.dbVoucherNo).then((val) => {
-      this.voucherNo = val ? +val : 1
-    }).catch(
-      error => this.service.presentToast('Error in getting voucher data' + error)
-    );
+    this.today = new Date().toISOString();
+
+    this.storage.get(this.dbVoucherNo).then(val => this.voucherNo = val ? +val : 1)
+      .catch(error => this.service.presentToast('Error in getting voucher data' + error));
 
     // this.storage.get(this.dbPrintPageSize).then((val) => {
     //   console.log('val is ', val);
@@ -117,15 +118,10 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.storage.get(this.dbSavedDescriptions).then((val) => {
       this.goldSavedDescriptions = val ? val.filter(element => element.category === 'Gold') : [];
       this.silverSavedDescriptions = val ? val.filter(element => element.category === 'Silver') : [];
-    }).catch(
-      error => this.service.presentToast('Error in autocomplete' + error)
-    );
+    }).catch(error => this.service.presentToast('Error in autocomplete' + error));
 
-    this.storage.get(this.dbNarration).then((val) => {
-      this.narration = val ? val : '';
-    }).catch(
-      error => this.service.presentToast('Error getting narration ' + error)
-    )
+    this.storage.get(this.dbNarration).then((val) => this.narration = val ? val : '')
+      .catch(error => this.service.presentToast('Error getting narration ' + error));
 
     this.itemForm = this.formBuilder.group({
       name: [],
@@ -135,7 +131,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
       description: [],
       weight1: [],
       lessWeight: [],
-      weight2: [],
+      weight2: [{ value: '', disabled: true }],
       rate: [],
       making: [],
       // makingType : [],
@@ -148,7 +144,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
       description: [],
       amount: []
     });
-
   }
 
   public getSavedDescription(inputValue): void {
@@ -173,12 +168,15 @@ export class HomePage implements AfterViewInit, OnDestroy {
     }
   }
 
+  closeDescription(ev: Event) {
+    ev.stopPropagation();
+    this.descriptions = [];
+  }
+
   public saveSearchedItem(description): void {
     this.descriptions = [];
     this.itemForm.patchValue({ description: description })
   }
-
-  ngAfterViewInit() { }
 
   hardwareBackButton() {
     this.platform.backButton.subscribe(() => {
@@ -193,6 +191,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   toggleWhatsapp() {
     this.isWhatsapp = !this.isWhatsapp;
   }
+
   getTotalAmount(): number {
     let amt: number = 0;
     if (this.items.length) {
@@ -227,6 +226,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
     if (category === 'Gold') {
       this.storage.get(this.dbGoldRate).then(
         (val) => {
+          this.categoryRate = val;
           this.itemForm.patchValue({ rate: val ? +val : '' })
         }).catch(
           error => this.service.presentToast('Error in gold rate' + error)
@@ -234,11 +234,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
       this.goldFill = "solid";
       this.otherFill = "outline";
       this.silverFill = "outline";
+      this.itemForm.patchValue({ making: 180 });
     }
     else if (category === 'Silver') {
       this.storage.get(this.dbSilverRate).then(
         (val) => {
-          // this.categoryRate = val;
+          this.categoryRate = val;
           this.itemForm.patchValue({ rate: val ? +val : '' })
         }).catch(
           error => this.service.presentToast('Error in silver rate' + error)
@@ -246,30 +247,28 @@ export class HomePage implements AfterViewInit, OnDestroy {
       this.silverFill = "solid";
       this.otherFill = "outline";
       this.goldFill = "outline";
+      this.itemForm.patchValue({ making: '' });
     }
     else {
       this.goldFill = "outline";
       this.silverFill = "outline";
       this.otherFill = "solid";
       // this.categoryRate = 0;
+      this.categoryRate = 0;
       this.itemForm.patchValue({ rate: '' })
+      this.itemForm.patchValue({ making: '' });
     }
   }
 
-  saveItem(makingTag, weightTag) {
+  saveItem() {
     let abc = this.itemForm.value;
-    if (makingTag)
-      this.makingType = '/item';
-    else
-      this.makingType = '/gram';
-
     this.items.push({
       id: this.itemCounter++,
       category: this.category,
       description: abc.description,
-      grossWeight: weightTag ? abc.weight1 : 0,
-      lessWeight: weightTag ? abc.lessWeight : 0,
-      nettWeight: weightTag ? abc.weight2 : abc.weight1,
+      grossWeight: this.isNettWeight ? abc.weight1 : 0,
+      lessWeight: this.isNettWeight ? abc.lessWeight : 0,
+      nettWeight: this.isNettWeight ? abc.weight2 : abc.weight1,
       rate: +abc.rate,
       making: abc.making,
       makingType: this.makingType,
@@ -283,8 +282,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
     });
     this.is916Hallmark = false;
     this.categorySelected('Gold');
-    this.weightTag.checked = false;
-    this.makingRateTag.checked = false;
+    this.isNettWeight = false;
+    this.makingType = '/gram';
   }
 
   deleteItem(item: Item) {
@@ -295,12 +294,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.lesses.splice(this.lesses.indexOf(less), 1)
   }
 
-  addNewItem(makingTag, weightTag) {
-    this.saveItem(makingTag, weightTag);
+  addNewItem() {
+    this.saveItem();
   }
 
-  goToLessBill(makingTag, weightTag) {
-    this.saveItem(makingTag, weightTag);
+  goToLessBill() {
+    this.saveItem();
     this.toggleBill();
   }
 
@@ -323,11 +322,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.isNewBillingItem = !this.isNewBillingItem;
   }
 
-  resetBill() {
 
-  }
-
-  getAmount(makingTagGross, weightTagLess): number {
+  getAmount(): number {
     let abc = this.itemForm.value;
     let weight: number = 0;
     if (abc.weight1 && abc.lessWeight) {
@@ -336,12 +332,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
     else {
       weight = abc.weight1;
     }
-    if (weightTagLess) {
-      return makingTagGross ? +(+weight * +abc.rate + +abc.making).toFixed(2)
+    if (this.isNettWeight) {
+      return this.makingType === '/item' ? +(+weight * +abc.rate + +abc.making).toFixed(2)
         : +(+weight * +abc.rate + (+abc.making * +weight)).toFixed(2);
     }
     else {
-      return makingTagGross ? +(+weight * +abc.rate + +abc.making).toFixed(2)
+      return this.makingType === '/item' ? +(+weight * +abc.rate + +abc.making).toFixed(2)
         : +(+weight * +abc.rate + (+abc.making * +weight)).toFixed(2);
     }
   }
@@ -405,7 +401,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
             this.addBill();
             this.service.makePdf(this.bill, '6x4');
             // this.service.selectPageSize(this.bill, this.pageSize);
-            // this.resetForms();
           }
         ).catch(
           (error) => this.service.presentToast(`Error in saving bill ${error}`)
@@ -427,12 +422,33 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.categorySelected('Gold');
     this.is916Hallmark = false;
     this.isWhatsapp = false;
-    this.makingRateTag.checked = false;
-    this.weightTag.checked = false;
+    this.makingType = '/gram';
+    this.isNettWeight = false;
+    this.today = new Date().toISOString();
+    this.billClear = true;
   }
 
+  toggleMakingType() {
+    if (this.makingType === '/gram') {
+      this.makingType = '/item';
+    } else {
+      this.makingType = '/gram';
+    }
+  }
 
+  toggleNettWeight() {
+    this.isNettWeight = !this.isNettWeight;
+  }
 
+  updateRate() {
+    if (this.category === 'Gold') {
+      this.storage.set(this.dbGoldRate, this.itemForm.get('rate').value).
+        then(() => this.service.presentToast(`Gold rate updated to Rs.${this.itemForm.get('rate').value}/gm`));
+    } else if (this.category === 'Silver') {
+      this.storage.set(this.dbSilverRate, this.itemForm.get('rate').value).
+        then(() => this.service.presentToast(`Silver rate updated to Rs.${this.itemForm.get('rate').value}/gm`));
+    }
+  }
   //    this.plt.ready().then(() => {
   //    let smsSend: boolean = false;
 
@@ -539,7 +555,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
    dbVoucherNo: string = 'voucherNo';
    dbBillDetails: string = 'bill';
    dbGoldRate: string = 'goldRate';
-   dbSilverRate: string = 'silverRate'
   
    public itemForm : FormGroup;
   mystring : string = "yash"
@@ -595,8 +610,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
        });
      }
      else if (category === 'Silver') {
-       this.storage.get(this.dbSilverRate).then((val) => {
-         this.categoryRate = +val
+\         this.categoryRate = +val
        });
      }
      else {
