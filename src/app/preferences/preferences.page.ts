@@ -15,6 +15,7 @@ export class PreferencesPage {
   presentGoldRate: number;
   presentSilverRate: number;
   narration: string = '';
+  gstPercent: number;
   selectedPage6x4: boolean = false;
 
   dbVoucherNo: string = 'voucherNo';
@@ -22,6 +23,7 @@ export class PreferencesPage {
   dbSilverRate: string = 'silverRate'
   dbBillDetails: string = 'bill';
   dbNarration: string = 'narration';
+  dbGSTPercent: string = 'gstPercent';
   // dbPrintPageSize: string = 'printPageSize';
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
@@ -32,12 +34,17 @@ export class PreferencesPage {
     this.storage.get(this.dbGoldRate).then((val) => this.presentGoldRate = +val).catch(
       (error) => this.service.presentToast('Error in getting Gold Rate' + error)
     );
-    this.storage.get(this.dbSilverRate).then((val) => this.presentSilverRate = +val).catch(
-      (error) => this.service.presentToast('Error in getting Silver Rate' + error)
-    );
-    this.storage.get(this.dbNarration).then((val) => this.narration = val ? val : '').catch(
-      (error) => this.service.presentToast('Error in getting Narration' + error)
-    );
+    this.storage.get(this.dbSilverRate).then(val => this.presentSilverRate = +val)
+      .catch(error => this.service.presentToast('Error in getting Silver Rate' + error));
+    this.storage.get(this.dbNarration).then(val => this.narration = val ? val : '')
+      .catch(error => this.service.presentToast('Error in getting Narration' + error));
+    this.storage.get(this.dbGSTPercent).then(val => {
+      this.gstPercent = +val;
+      if (this.gstPercent === 0) {
+        this.storage.set(this.dbGSTPercent, 3);
+      }
+    })
+      .catch(error => this.service.presentToast('Error in getting GST percent' + error));
 
 
     // this.storage.get(this.dbPrintPageSize).then((val) => {
@@ -45,14 +52,14 @@ export class PreferencesPage {
     //   this.selectedPage6x4 = val === '6x4' ? true : false
     // })
 
-   //  debugger;
-  //   this.storage.get(this.dbPrintPageSize).then((val) => {
-  //     console.log('here')
-  //     this.selectedPage6x4 = val === '6x4' ? true : false;
-  // console.log(val);
-  // }).catch(
-  //     (error) => this.service.presentToast('Error in getting default page size, selected 6x4')
-  //   )
+    //  debugger;
+    //   this.storage.get(this.dbPrintPageSize).then((val) => {
+    //     console.log('here')
+    //     this.selectedPage6x4 = val === '6x4' ? true : false;
+    // console.log(val);
+    // }).catch(
+    //     (error) => this.service.presentToast('Error in getting default page size, selected 6x4')
+    //   )
   }
 
   // await alertConfirmBox()
@@ -89,13 +96,11 @@ export class PreferencesPage {
   }
 
   updateSilver(rate: number) {
-    this.storage.set(this.dbSilverRate, rate).then(
-      () => {
-        this.service.presentToast(`Silver Rate update to Rs.${rate}/gm`);
-        this.presentSilverRate = rate;
-        (<HTMLInputElement>document.getElementById("silverRate")).value = "";
-      }
-    )
+    this.storage.set(this.dbSilverRate, rate).then(() => {
+      this.service.presentToast(`Silver Rate update to Rs.${rate}/gm`);
+      this.presentSilverRate = rate;
+      (<HTMLInputElement>document.getElementById("silverRate")).value = "";
+    });
   }
 
   updateNarration() {
@@ -109,9 +114,6 @@ export class PreferencesPage {
   resetNarration() {
     this.narration = '';
     this.updateNarration();
-  }
-  ionViewDidLoad() {
-    // console.log('ionViewDidLoad SettingsPage');
   }
 
 }

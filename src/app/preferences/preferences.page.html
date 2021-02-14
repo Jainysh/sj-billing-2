@@ -50,6 +50,19 @@
     </ion-card-content>
   </ion-card>
 
+  
+  <!-- <ion-card>
+    <ion-card-header>
+      <ion-card-title>GST : {{ gstPercent}}%</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-input id="goldRate" placeholder="New Gold Rate" #goldRate type="number"></ion-input>
+        <ion-button [disabled]="!goldRate.value" size="default" fill="solid" (click)='updateGold(goldRate.value)'>Update
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card> -->
   <!-- <ion-card>
     <ion-card-header>
       <ion-card-title>Bills</ion-card-title>
@@ -99,8 +112,6 @@
     </ion-card-header>
     <ion-card-content style="text-align: center">
       <ion-item>
-        <!-- <ion-input [(ngModel)]="narration" placeholder="Enter narration here">
-        </ion-input> -->
         <ion-textarea [(ngModel)]="narration" placeholder="Enter narration here"></ion-textarea>
       </ion-item>
    
