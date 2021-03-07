@@ -87,7 +87,7 @@
 
         <ion-item>
           <ion-label position="fixed">{{isNettWeight ? 'Gross' : 'Nett'}} Weight</ion-label>
-          <ion-input formControlName="weight1" type="number"></ion-input>
+          <ion-input formControlName="weight1" (keyup)="getWeight2()" type="number"></ion-input>
 
           <ion-button fill="clear" slot="end" (click)="toggleNettWeight()">
             <ion-icon name="{{isNettWeight? 'close-outline' : 'remove-outline'}}"> </ion-icon>
@@ -96,12 +96,12 @@
 
         <ion-item *ngIf="isNettWeight">
           <ion-label position="fixed">Less Weight</ion-label>
-          <ion-input formControlName="lessWeight" type="number"></ion-input>
+          <ion-input formControlName="lessWeight" (keyup)="getWeight2()" type="number"></ion-input>
         </ion-item>
 
         <ion-item *ngIf="isNettWeight">
           <ion-label position="fixed">Nett Weight</ion-label>
-          <ion-input formControlName="weight2" [value]="getWeight2() >= 0 ? getWeight2() : ''" type="number">
+          <ion-input formControlName="weight2" type="number">
           </ion-input>
         </ion-item>
 

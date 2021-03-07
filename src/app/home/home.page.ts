@@ -127,13 +127,14 @@ export class HomePage implements OnDestroy {
       description: [],
       weight1: [],
       lessWeight: [],
-      weight2: [{ value: '', disabled: true }],
+      weight2: [],
       rate: [],
       making: [],
       // makingType : [],
       amount: [],
     });
 
+    this.itemForm.controls['weight2'].disable();
     this.categorySelected('Gold');
 
     this.lessForm = this.formBuilder.group({
@@ -203,13 +204,11 @@ export class HomePage implements OnDestroy {
     return amt;
   }
 
-  getWeight2(): number {
+  getWeight2() {
     let abc = this.itemForm.value;
-    if (abc.weight1 && abc.lessWeight) {
-      return +(Math.abs(abc.weight1) - Math.abs(abc.lessWeight)).toFixed(3);
-    }
-    else {
-      return -1;
+    if (this.isNettWeight) {
+      const weight2 = +(Math.abs(abc.weight1) - Math.abs(abc.lessWeight)).toFixed(3)
+      this.itemForm.controls['weight2'].setValue(weight2 >= 0 ? weight2 : 0);
     }
   }
 
@@ -257,7 +256,7 @@ export class HomePage implements OnDestroy {
   }
 
   saveItem() {
-    let abc = this.itemForm.value;
+    let abc = this.itemForm.getRawValue();
     this.items.push({
       id: this.itemCounter++,
       category: this.category,
@@ -320,10 +319,10 @@ export class HomePage implements OnDestroy {
 
 
   getAmount(): number {
-    let abc = this.itemForm.value;
+    let abc = this.itemForm.getRawValue();
     let weight: number = 0;
     if (abc.weight1 && abc.lessWeight) {
-      weight = this.getWeight2() >= 0 ? this.getWeight2() : 0;
+      weight = abc.weight2 >= 0 ? abc.weight2 : 0;
     }
     else {
       weight = abc.weight1;
