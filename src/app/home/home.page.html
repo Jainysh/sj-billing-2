@@ -213,39 +213,43 @@
       </ion-button>
     </ion-item> -->
 
-    <ion-card class="m-0 p-0" *ngIf="lesses.length || items.length">
-      <ion-item>
-        <ion-label>Total Bill Amount (₹)</ion-label>
-        <ion-label class="ion-text-end">{{getTotalAmount()}}</ion-label>
-      </ion-item>
-      <ion-item>
-        <ion-label>Paid Amount (₹)</ion-label>
-        <ion-input style="text-align: right" (focus)="this.select()" color="secondary" #paidAmount type="number"
-          [value]="getTotalAmount()">
-        </ion-input>
-      </ion-item>
-      <ion-grid *ngIf="getTotalAmount() - paidAmount.value > 0" class="ion-no-padding">
-        <ion-row>
-          <ion-col width-65>
-            <ion-item>
-              <ion-label>Balance</ion-label>
-              <ion-input style="text-align: right" type="number" [value]="getTotalAmount() - paidAmount.value">
-              </ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col width-30>
-            <ion-item>
-              <ion-label>{{ billClear ? 'Its Okay!' : 'Pending'}}</ion-label>
-              <ion-toggle slot="end" [(ngModel)]="billClear"></ion-toggle>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card>
+    <ion-item>
+      <ion-label>Total Bill Amount (₹)</ion-label>
+      <ion-label class="ion-text-end">{{getTotalAmount()}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>Paid Amount (₹)</ion-label>
+      <ion-input style="text-align: right" (focus)="this.select()" color="secondary" #paidAmount type="number"
+        [value]="getTotalAmount()">
+      </ion-input>
+    </ion-item>
+    <ion-grid *ngIf="getTotalAmount() - paidAmount.value > 0" class="ion-no-padding">
+      <ion-row>
+        <ion-col width-65>
+          <ion-item>
+            <ion-label>Balance</ion-label>
+            <ion-input style="text-align: right" type="number" [value]="getTotalAmount() - paidAmount.value">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col width-30>
+          <ion-item>
+            <ion-label>{{ billClear ? 'Its Okay!' : 'Pending'}}</ion-label>
+            <ion-toggle slot="end" [(ngModel)]="billClear"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-    <ion-button [disabled]="!(lesses.length || items.length)" fill="solid" expand="full" class="ion-text-wrap"
+    <!-- <ion-button [disabled]="!(lesses.length || items.length)" fill="solid" expand="full" class="ion-text-wrap"
       (click)="finishBilling(paidAmount.value)">
       <ion-icon name="checkmark"></ion-icon>&nbsp; Finish Billing
-    </ion-button>
+    </ion-button> -->
   </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" [disabled]="!(lesses.length || items.length)"
+      (click)="finishBilling(paidAmount.value)">
+      <ion-icon name="print-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

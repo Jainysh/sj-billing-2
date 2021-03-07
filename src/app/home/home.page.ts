@@ -52,9 +52,9 @@ export class HomePage implements OnDestroy {
   dbSavedDescriptions: string = 'savedDescriptions';
   dbNarration: string = 'narration';
   dbAppInitialized: string = 'isAppInitialized';
-  // dbPrintPageSize: string = 'printPageSize';
+  dbPrintPageSize: string = 'printPageSize';
 
-  // selectedPage6x4: boolean = false;
+  selectedPage: string = '';
   isWhatsapp: boolean = false;
   is916Hallmark: boolean = false;
 
@@ -74,7 +74,6 @@ export class HomePage implements OnDestroy {
   voucherNo: number = 1;
   today: string = '';
   custAddress: string = 'Jaysingpur';
-  // pageSize = '';
   //itemCategorySelected: boolean = false;
   currentDescription: string = '';
   category: string = '';
@@ -109,12 +108,9 @@ export class HomePage implements OnDestroy {
     this.storage.get(this.dbVoucherNo).then(val => this.voucherNo = val ? +val : 1)
       .catch(error => this.service.presentToast('Error in getting voucher data' + error));
 
-    // this.storage.get(this.dbPrintPageSize).then((val) => {
-    //   console.log('val is ', val);
+    this.storage.get(this.dbPrintPageSize).then(val => this.selectedPage = val || 'A5')
+      .catch(error => this.service.presentToast('Error in pageSize' + error));
 
-    //   this.pageSize = val;
-    //   this.selectedPage6x4 = val === '6x4' ? true : false
-    // })
     this.storage.get(this.dbSavedDescriptions).then((val) => {
       this.goldSavedDescriptions = val ? val.filter(element => element.category === 'Gold') : [];
       this.silverSavedDescriptions = val ? val.filter(element => element.category === 'Silver') : [];
@@ -343,20 +339,8 @@ export class HomePage implements OnDestroy {
   }
 
   addBill() {
-    this.storage.get(this.dbVoucherNo).then(
-      (val) => {
-        if (val) {
-          this.voucherNo = +val;
-          this.voucherNo++;
-        }
-        else {
-          this.voucherNo = 1;
-        }
-        this.storage.set(this.dbVoucherNo, this.voucherNo)
-      }
-    ).catch(
-      (error) => this.service.presentToast('Failed to load voucher number. Using default')
-    );
+    this.voucherNo++;
+    this.storage.set(this.dbVoucherNo, this.voucherNo);
   }
 
   finishBilling(paidAmount) {
@@ -387,8 +371,7 @@ export class HomePage implements OnDestroy {
             this.service.presentToast('Bill Saved Successfully');
             this.addBill();
             //   this.resetForms();  DO NOT RESET BILL DATA ON FINISHING BILL
-            // this.service.makePdf(this.bill, this.pageSize);
-            this.service.makePdf(this.bill, '6x4');
+            this.service.makePdf(this.bill, this.selectedPage);
             //      this.service.selectPageSize(this.bill, this.pageSize);
           }
         ).catch(error => this.service.presentToast(`Error in saving bill ${error}`))
@@ -399,7 +382,7 @@ export class HomePage implements OnDestroy {
           () => {
             this.service.presentToast('Bill Saved Successfully');
             this.addBill();
-            this.service.makePdf(this.bill, '6x4');
+            this.service.makePdf(this.bill, this.selectedPage);
             // this.service.selectPageSize(this.bill, this.pageSize);
           }
         ).catch(
@@ -544,126 +527,4 @@ export class HomePage implements OnDestroy {
   //   // });
 
   // }
-
-
-
-
-  /* previous code
-  
-  
-  
-   dbVoucherNo: string = 'voucherNo';
-   dbBillDetails: string = 'bill';
-   dbGoldRate: string = 'goldRate';
-  
-   public itemForm : FormGroup;
-  mystring : string = "yash"
-   voucherNo: string = "0";
-   today: string = new Date().toISOString();
-   custAddress: string = 'Jaysingpur';
-   //itemCategorySelected: boolean = false;
-   currentDescription: string = '';
-   category: string = '';
-   categoryRate: number;
-   makingType:string = '';
-  
-   bill : Bill;
-   items : Item[] = [];
-   lesses : Less[] = [];
-  
-  
-   // specialDetails: string = '';
-   //specialDetailsSelected : boolean = false;
-   constructor(private formBuilder: FormBuilder,
-     public navCtrl: NavController, private storage: Storage, private toastController: ToastController) {
-     this.storage.get(this.dbVoucherNo).then((val) => {
-       this.voucherNo = val
-     });
-  
-     this.itemForm = this.formBuilder.group({
-     //  category:[''],
-       description:[],
-       weight1:[],
-       lessWeight:[],
-       weight2:[],
-       rate : [],
-       making : [],
-      // makingType : [],
-       amount: [],
-     });
-   }
-  
-   async presentToast(message: string) {
-     const toast = await this.toastController.create({
-       message: message,
-       duration: 1500
-     });
-     toast.present();
-   }
-  
-   categorySelected(category: string) {
-     this.category = category;
-     // this.itemCategorySelected = true;
-     if (category === 'Gold') {
-       this.storage.get(this.dbGoldRate).then((val) => {
-         this.categoryRate = +val
-       });
-     }
-     else if (category === 'Silver') {
-\         this.categoryRate = +val
-       });
-     }
-     else {
-       this.categoryRate = 0;
-     }
-     //    this.specialDetailsSelected = true;
-   }
-  
-   saveItem(){
-     let abc= this.itemForm.value;
-     // if(abc.weight2 || abc.lessWeight ){
-  
-     // }
-     this.items.push({
-       category : this.category,
-       description : abc.description,
-       grossWeight : abc.weight2 ? abc.weight1 : 0,
-       lessWeight : abc.weight2 ? abc.lessWeight : 0,
-       nettWeight : abc.weight2 ? abc.weight2 : abc.weight1,
-       rate : abc.rate,
-       making : abc.making,
-       makingType : '',
-       amount : abc.amount
-     })
-     this.itemForm.reset();
-   }
-  
-   getAmount(weight: number, rate: number, making: number, tag: any): number {
-     if (tag) {
-       this.makingType = 'gross';
-       return +weight * +rate + +making;
-     }
-     else {
-       this.makingType = 'per gram';      
-       return Math.round((+weight * +rate + (+making * +weight))*100)/100;
-     }
-   }
-  
-  
-   addBill() {
-     this.storage.get(this.dbVoucherNo).then(
-       (val) => {
-         if (val) {
-           this.voucherNo = val;
-         }
-         else {
-           this.voucherNo = "1";
-         }
-         this.storage.set(this.dbVoucherNo, this.voucherNo + 1)
-       }
-     ).catch(
-       (error) => this.presentToast('Failed to load voucher number. Using default')
-     );
-   } */
-
 }

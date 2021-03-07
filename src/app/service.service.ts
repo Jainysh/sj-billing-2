@@ -16,6 +16,10 @@ pdfmake.vfs = pdfFonts.pdfMake.vfs;
 export class ServiceService {
 
   dbSavedDescriptions: string = 'savedDescriptions';
+  
+  ones = ['', 'One ', 'Two ', 'Three ', 'Four ', 'Five ', 'Six ', 'Seven ', 'Eight ', 'Nine ', 'Ten ',
+    'Eleven ', 'Twelve ', 'Thirteen ', 'Fourteen ', 'Fifteen ', 'Sixteen ', 'Seventeen ', 'Eighteen ', 'Nineteen '];
+  tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
 
   constructor(public file: File, public fileOpener: FileOpener, public storage: Storage,
     private toastController: ToastController, public plt: Platform,
@@ -53,7 +57,7 @@ export class ServiceService {
   async makePdf(bill: Bill, paperSize: string = '6x4') {
     let billBody: any[] = [];
     const loader = await this.loadingCtrl.create({
-      message: 'Bill is getting generated...'
+      message: 'Preparing bill'
     });
     loader.present();
     pdfmake.vfs = pdfFonts.pdfMake.vfs;
@@ -133,13 +137,13 @@ export class ServiceService {
             text: totalPurchase.toFixed(0),
             italics: true,
             bold: true,
-            alignment: 'center',
+            alignment: 'right',
             style: 'tableContent',
           },
           {
             border: [false, true, false, false],
             fillColor: '#ffffff',
-            text: 'Total Purchase\n ',
+            text: 'Total Purchase',
             italics: true,
             bold: true,
             alignment: 'left',
@@ -365,10 +369,10 @@ export class ServiceService {
         {
           text: `${bill.billClear ? "" : "\nAmount Paid : " + bill.paidAmount + "\nPending Balance : " + bill.outstandingAmount}`
         },
-        {
-          text: "\n\nThank you for shopping with us",
-          alignment: "center"
-        },
+        // {
+        //   text: "\n\nThank you for shopping with us",
+        //   alignment: "center"
+        // },
         {
           text: (bill.narration.length ? '\n' + bill.narration : ''), alignment: 'center', bold: true
         }
@@ -409,20 +413,6 @@ export class ServiceService {
         },
         tableHeader: {
           fontSize: paperSize === 'A5' ? 12 : 10
-        },
-        header: {
-          bold: true,
-          fontSize: 17,
-          alignment: 'center',
-          //    font: 'Hindi'
-        },
-        sub_header: {
-          fontSize: 10,
-          alignment: 'center'
-        },
-        url: {
-          fontSize: 10,
-          alignment: 'center'
         }
       },
       pageSize: paperSize === 'A5' ? 'A5' : { width: 298, height: 420 },
@@ -449,6 +439,18 @@ export class ServiceService {
       billItem.download();
       loader.dismiss();
     }
+  }
+
+  numberToWords(num): string {
+    if ((num = num.toString()).length > 9) return 'overflow';
+    let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return; var str = '';
+    str += (+n[1] != 0) ? (this.ones[Number(n[1])] || this.tens[n[1][0]] + ' ' + this.ones[n[1][1]]) + 'Crore ' : '';
+    str += (+n[2] != 0) ? (this.ones[Number(n[2])] || this.tens[n[2][0]] + ' ' + this.ones[n[2][1]]) + 'Lakh ' : '';
+    str += (+n[3] != 0) ? (this.ones[Number(n[3])] || this.tens[n[3][0]] + ' ' + this.ones[n[3][1]]) + 'Thousand ' : '';
+    str += (+n[4] != 0) ? (this.ones[Number(n[4])] || this.tens[n[4][0]] + ' ' + this.ones[n[4][1]]) + 'Hundred ' : '';
+    str += (+n[5] != 0) ? ((str != '') ? 'and ' : '') + (this.ones[Number(n[5])] || this.tens[n[5][0]] + ' ' + this.ones[n[5][1]]) + 'Only ' : '';
+    return str;
   }
 
   getDefaultSavedDescriptions(): SavedDescription[] {

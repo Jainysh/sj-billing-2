@@ -21,9 +21,9 @@
         </ion-button>
       </ion-item>
     </ion-card-content>
-  </ion-card>
+    <!-- </ion-card>
 
-  <ion-card>
+  <ion-card> -->
     <ion-card-header>
       <ion-card-title>Current Silver Rate : Rs.{{presentSilverRate}}/gm </ion-card-title>
     </ion-card-header>
@@ -34,9 +34,9 @@
           Update</ion-button>
       </ion-item>
     </ion-card-content>
-  </ion-card>
+    <!-- </ion-card>
 
-  <ion-card>
+  <ion-card> -->
     <ion-card-header>
       <ion-card-title>Current Voucher Number : {{presentVoucherNo}}</ion-card-title>
     </ion-card-header>
@@ -50,7 +50,15 @@
     </ion-card-content>
   </ion-card>
 
-  
+  <ion-card>
+    <ion-item>
+      <ion-label>Paper size</ion-label>
+      <ion-select (ionChange)="updatePageSize($event)" [value]="selectedPage" ok-text="Okay" cancel-text="Cancel">
+        <ion-select-option value="6x4">6x4</ion-select-option>
+        <ion-select-option value="A5">A5</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-card>
   <!-- <ion-card>
     <ion-card-header>
       <ion-card-title>GST : {{ gstPercent}}%</ion-card-title>
@@ -114,7 +122,7 @@
       <ion-item>
         <ion-textarea [(ngModel)]="narration" placeholder="Enter narration here"></ion-textarea>
       </ion-item>
-   
+
       <ion-button [disabled]="narration.length === 0" style="width: 45%" (click)="updateNarration()">
         <ion-icon name="save"></ion-icon>
       </ion-button>

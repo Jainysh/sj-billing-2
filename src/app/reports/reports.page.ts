@@ -30,7 +30,7 @@ export class ReportsPage implements OnInit {
     }).catch(
       (error) => this.service.presentToast('Error in getting Bill data ' + error)
     );
-    this.storage.get(this.dbPrintPageSize).then((val) => this.printPageSize = val).catch(
+    this.storage.get(this.dbPrintPageSize).then((val) => this.printPageSize = val || 'A5').catch(
       (error) => this.service.presentToast('Error in setting page size ' + error)
     )
   }
@@ -52,13 +52,8 @@ export class ReportsPage implements OnInit {
           handler: () => {
             this.storage.remove(this.dbBillDetails).then(() => {
               this.bills = [];
-              this.storage.set(this.dbVoucherNo, 1).then(
-                () => this.service.presentToast("Success! Bills cleared. Voucher number updated to 1")
-              )
-            }).catch(
-              (error) => this.service.presentToast('Something went wrong! Try again')
-            );
-            //  console.log('Confirm Okay');
+              this.storage.set(this.dbVoucherNo, 1).then(() => this.service.presentToast("Success! Bills cleared. Voucher number updated to 1"));
+            }).catch(error => this.service.presentToast('Something went wrong! Try again'));
           }
         }
       ]
@@ -66,17 +61,10 @@ export class ReportsPage implements OnInit {
     await alert.present();
   }
 
-  // viewBills() {
-  //   this.router.navigate(['/view-bill']);
-  // }
   printBill(bill: Bill) {
-    // console.log(bill)
-    if (this.printPageSize) {
-      this.service.makePdf(bill, this.printPageSize);
-    } else {
-      this.service.makePdf(bill)
-    }
+    this.service.makePdf(bill, this.printPageSize);
   }
+
   // excel export function
   getStoragePath() {
     let file = this.file;
